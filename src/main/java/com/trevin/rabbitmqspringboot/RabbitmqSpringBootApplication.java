@@ -48,11 +48,6 @@ public class RabbitmqSpringBootApplication {
 		return new Jackson2JsonMessageConverter(objectMapper);
 	}
 
-
-
-
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(RabbitmqSpringBootApplication.class, args);
 	}

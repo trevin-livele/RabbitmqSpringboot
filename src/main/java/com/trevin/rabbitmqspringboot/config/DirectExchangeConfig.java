@@ -31,12 +31,23 @@ public class DirectExchangeConfig {
     @Value("${rabbitmq.direct.routing-key-2}")
     private String DIRECT_ROUTING_KEY_2;
 
+    @Value("${rabbitmq.direct.dead-letter-queue-1}")
+    private String DIRECT_DEAD_LETTER_QUEUE_1;
+
     Queue createDirectQueue1(){
-        return new Queue(DIRECT_QUEUE_1, true, false,false);
+
+        return QueueBuilder.durable(DIRECT_QUEUE_1).deadLetterExchange("")//default exchange
+                .deadLetterRoutingKey(DIRECT_DEAD_LETTER_QUEUE_1).build();
+//        return new Queue(DIRECT_QUEUE_1, true, false,false);
     }
 
     Queue createDirectQueue2(){
         return new Queue(DIRECT_QUEUE_2, true, false,false);
+    }
+
+
+    Queue createDeadLetterQueue1(){
+        return new Queue(DIRECT_DEAD_LETTER_QUEUE_1, true,false,false);
     }
 
 
@@ -64,6 +75,7 @@ public class DirectExchangeConfig {
     public void init(){
         amqpAdmin.declareQueue(createDirectQueue1());
         amqpAdmin.declareQueue(createDirectQueue2());
+        amqpAdmin.declareQueue(createDeadLetterQueue1());
         amqpAdmin.declareExchange(createDirectExchange());
         amqpAdmin.declareBinding(createDirectBinding1());
         amqpAdmin.declareBinding(createDirectBinding2());

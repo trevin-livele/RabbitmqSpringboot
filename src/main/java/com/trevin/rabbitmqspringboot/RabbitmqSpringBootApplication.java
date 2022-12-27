@@ -1,9 +1,11 @@
 package com.trevin.rabbitmqspringboot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -57,6 +59,15 @@ public class RabbitmqSpringBootApplication {
 		containerFactory.setMaxConcurrentConsumers(10);
 		containerFactory.setAutoStartup(true);
 		containerFactory.setPrefetchCount(10);
+
+//
+//		containerFactory.setAdviceChain(RetryInterceptorBuilder.stateless()
+//				.maxAttempts(3)
+//				.recoverer(new RejectAndDontRequeueRecoverer())
+//				.build());
+
+//		if there is a problem don't requeue send to DLX
+//		containerFactory.setDefaultRequeueRejected(false);
 
 		return containerFactory;
 	}
